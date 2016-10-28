@@ -1,0 +1,5 @@
+FROM k82cn/hadoop:2.7.2
+MAINTAINER Klaus Ma <klaus1982.cn@gmail.com>
+
+
+
