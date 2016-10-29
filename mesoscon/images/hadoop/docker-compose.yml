@@ -1,0 +1,14 @@
+version: "2"
+services:
+  dfsmaster:
+    image: hadoop:2.7.2
+    build:
+      context: .
+      dockerfile: Dockerfile.hadoop
+    command: ["./sbin/start-dfs.sh"]
+  dfsagent:
+    image: hadoop:2.7.2
+    depends_on:
+      - dfsmaster
+    links:
+      - dfsmaster

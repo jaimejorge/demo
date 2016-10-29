@@ -1,0 +1,18 @@
+FROM ubuntu:16.04
+MAINTAINER Klaus Ma <klaus1982.cn@gmail.com>
+
+RUN apt-get update && apt-get install -y openjdk-8-jdk libapr1-dev libsvn-dev libcurl4-nss-dev libsasl2-dev libsasl2-modules curl openssh-server
+
+RUN cd /usr/local/ && curl -L http://mirrors.sonic.net/apache/hadoop/common/hadoop-2.7.2/hadoop-2.7.2.tar.gz | tar xz
+
+WORKDIR /usr/local/hadoop-2.7.2
+
+RUN mkdir -p /opt/hadoop272 /root/.ssh
+
+COPY *.xml etc/hadoop/
+COPY id_rsa* /root/.ssh
+COPY authorized_keys /root/.ssh
+
+ENV USER root
+ENV JAVA_HOME=/usr
+
