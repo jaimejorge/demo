@@ -1,0 +1,12 @@
+{
+	"credentials" : [
+		{
+			"principal": "myriad",
+			"secret": "myriad"
+		},
+		{
+			"principal": "k8sm",
+			"secret": "k8sm"
+		}
+	]
+}
