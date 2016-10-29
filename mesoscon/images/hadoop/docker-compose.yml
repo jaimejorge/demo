@@ -5,9 +5,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.hadoop
-    command: ["./sbin/start-dfs.sh"]
+    command: ["./start_hdfs_master.sh"]
   dfsagent:
     image: hadoop:2.7.2
+    command: ["./start_hdfs_agent.sh"]
     depends_on:
       - dfsmaster
     links:
