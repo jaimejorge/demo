@@ -13,7 +13,9 @@ services:
     volumes:
       - ${PWD}/log/mesos:/var/log/mesos
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${PWD}/images/hadoop-2.7.2/:/opt/hadoop-2.7.2
+      - /cgroup:/cgroup
+      - /sys:/sys
+      - ${PWD}/hadoop:/opt/hadoop-2.7.2
     links:
       - mesosmaster
   mesosmaster:
@@ -45,3 +47,15 @@ services:
       - dfsmaster
     links:
       - dfsmaster
+  myriad:
+    image: k82cn/myriad:0.2.0-hadoop272
+    volumes:
+      - ${PWD}/hadoop:/opt/hadoop
+    depends_on:
+      - dfsmaster
+      - mesosmaster
+      - zk
+    links:
+      - dfsmaster
+      - mesosmaster
+      - zk
