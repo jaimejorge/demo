@@ -51,6 +51,8 @@ services:
     image: k82cn/myriad:0.2.0-hadoop272
     volumes:
       - ${PWD}/hadoop:/opt/hadoop
+    ports:
+      - "8192:8192"
     depends_on:
       - dfsmaster
       - mesosmaster
