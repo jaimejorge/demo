@@ -1,6 +1,6 @@
 curl -i \
 	 -u myriad:myriad \
-	 -d slaveId=a1e049c1-6e92-414f-8d81-a4f19fbc9b05-S0 \
+	 -d slaveId=3fd7e6dc-26d0-4d5c-9b35-5e92c0e69bcb-S1 \
 	 -d resources='[
 		{
 			"name": "cpus",
@@ -21,4 +21,4 @@ curl -i \
 			}
 		}
 ]' \
-	-X POST http://172.17.0.2:5050/master/reserve
+	-X POST http://172.17.0.4:5050/master/reserve

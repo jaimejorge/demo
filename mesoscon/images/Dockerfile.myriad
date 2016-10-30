@@ -5,11 +5,10 @@ RUN apt-get update && apt-get install -y openjdk-8-jdk libapr1-dev libsvn-dev li
 
 ENV JAVA_HOME=/usr
 
-COPY hadoop-2.7.2 /usr/loca/hadoop-2.7.2
+COPY hadoop-2.7.2 /usr/local/hadoop-2.7.2
 
-WORKDIR /usr/loca/hadoop-2.7.2
+WORKDIR /usr/local/hadoop-2.7.2
 
 ENV USER root
 
 CMD ["./start_myriad.sh"]
-

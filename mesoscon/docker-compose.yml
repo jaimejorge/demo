@@ -15,9 +15,9 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /cgroup:/cgroup
       - /sys:/sys
+      - ${PWD}/images/hadoop-2.7.2/:/opt/hadoop-2.7.2
     links:
       - mesosmaster
-#      - httpserver
   mesosmaster:
     image: mesosphere/mesos-master:0.28.2-2.0.27.ubuntu1404
     ports:
@@ -33,12 +33,6 @@ services:
       - ${PWD}/tmp/mesos:/var/tmp/mesos
       - ${PWD}/mesos_cred:/opt/mesos_cred
       - ${PWD}/mesos_acls:/opt/mesos_acls
-  httpserver:
-    image: nginx:stable
-    ports:
-      - "8080:80"
-    volumes:
-      - ${PWD}:/usr/share/nginx/html:ro
   zk:
     image: k82cn/zk:3.4.9
     ports:
