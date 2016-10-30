@@ -13,8 +13,6 @@ services:
     volumes:
       - ${PWD}/log/mesos:/var/log/mesos
       - /var/run/docker.sock:/var/run/docker.sock
-      - /cgroup:/cgroup
-      - /sys:/sys
       - ${PWD}/images/hadoop-2.7.2/:/opt/hadoop-2.7.2
     links:
       - mesosmaster
