@@ -5,40 +5,50 @@ services:
     privileged: true
     depends_on:
       - mesosmaster
-    environment:
-      - MESOS_MASTER=mesosmaster:5050
-      - MESOS_SWITCH_USER=0
-      - MESOS_CONTAINERIZERS=mesos
-      - MESOS_LOG_DIR=/var/log/mesos
-      - MESOS_WORK_DIR=/var/tmp/mesos
     volumes:
       - ${PWD}/log/mesos:/var/log/mesos
       - ${PWD}/hadoop:/opt/hadoop-2.7.2
-    command:
-      - wrapdocker
-      - mesos-slave
-    links:
-      - mesosmaster
-  mesosagent_r:
-    image: k82cn/mesos-slave-dind:0.2.4_mesos-0.28.2_docker-1.11.2_ubuntu-14.04.4
-    privileged: true
-    depends_on:
-      - mesosmaster
+    entrypoint:
+      - /bin/bash
+      - -cx
+      - >
+        exec wrapdocker mesos-slave
     environment:
       - MESOS_MASTER=mesosmaster:5050
-      - MESOS_SWITCH_USER=0
-      - MESOS_CONTAINERIZERS=mesos
+      - MESOS_PORT=5051
       - MESOS_LOG_DIR=/var/log/mesos
-      - MESOS_WORK_DIR=/var/tmp/mesos
-    volumes:
-      - ${PWD}/log/mesos:/var/log/mesos
-      - ${PWD}/hadoop:/opt/hadoop-2.7.2
-    command:
-      - wrapdocker
-      - mesos-slave
-      - --resources=cpus(myriad):6;mem(myriad):8192
+      - MESOS_LOGGING_LEVEL=INFO
+      - MESOS_SWITCH_USER=0
+      - MESOS_CONTAINERIZERS=docker,mesos
+      - MESOS_ISOLATION=cgroups/cpu,cgroups/mem
+      - VAR_LIB_DOCKER_SIZE=10
+      - DOCKER_DAEMON_ARGS
+      - GLOG_v=4
+      - LOG=file
+      - docker_http_proxy=9.21.58.21:3128
+      - docker_https_proxy=9.21.58.21:3128
     links:
       - mesosmaster
+#  mesosagent_r:
+#    image: k82cn/mesos-slave-dind:0.2.4_mesos-0.28.2_docker-1.11.2_ubuntu-14.04.4
+#    privileged: true
+#    depends_on:
+#      - mesosmaster
+#    environment:
+#      - MESOS_MASTER=mesosmaster:5050
+#      - MESOS_SWITCH_USER=0
+#      - MESOS_CONTAINERIZERS=mesos
+#      - MESOS_LOG_DIR=/var/log/mesos
+#      - MESOS_WORK_DIR=/var/tmp/mesos
+#    volumes:
+#      - ${PWD}/log/mesos:/var/log/mesos
+#      - ${PWD}/hadoop:/opt/hadoop-2.7.2
+#    command:
+#      - wrapdocker
+#      - mesos-slave
+#      - --resources=cpus(myriad):6;mem(myriad):8192
+#    links:
+#      - mesosmaster
   mesosmaster:
     image: mesosphere/mesos-master:0.28.2-2.0.27.ubuntu1404
     ports:
