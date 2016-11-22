@@ -1,0 +1,5 @@
+FROM ubuntu:14.04
+MAINTAINER Klaus Ma <klaus1982.cn@gmail.com>
+
+RUN apt-get update && apt-get install openssl
+

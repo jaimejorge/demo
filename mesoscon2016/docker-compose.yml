@@ -1,5 +1,9 @@
 version: '2'
 services:
+  genkey:
+    image: k82cn/genkey:ubuntu1404
+    volumes:
+      - ${PWD}:/opt
   mesosagent:
     image: k82cn/mesos-slave-dind:0.2.4_mesos-0.28.2_docker-1.11.2_ubuntu-14.04.4
     privileged: true
@@ -25,8 +29,8 @@ services:
       - DOCKER_DAEMON_ARGS
       - GLOG_v=4
       - LOG=file
-      - docker_http_proxy=9.21.58.21:3128
-      - docker_https_proxy=9.21.58.21:3128
+#      - docker_http_proxy=9.21.58.21:3128
+#      - docker_https_proxy=9.21.58.21:3128
     links:
       - mesosmaster
 #  mesosagent_r:
@@ -95,12 +99,21 @@ services:
        --cloud-provider=mesos
        --cloud-config=/opt/mesos-cloud.conf
        --allow-privileged
-       --v=4
+       --admission-control=ServiceAccount,DefaultStorageClass,AlwaysAdmit
+       --client-ca-file=/opt/ca.crt
+       --service-account-key-file=/opt/ca.key
+       --tls-cert-file=/opt/server.crt
+       --tls-private-key-file=/opt/server.key
+       --v=8
     volumes:
       - ${PWD}/mesos-cloud.conf:/opt/mesos-cloud.conf
-      - /usr/local/bin/kubectl:/usr/local/bin/kubectl
+      - ${PWD}/ca.crt:/opt/ca.crt
+      - ${PWD}/ca.key:/opt/ca.key
+      - ${PWD}/server.crt:/opt/server.crt
+      - ${PWD}/server.key:/opt/server.key
     depends_on:
       - etcd
+      - genkey
       - mesosmaster
     links:
       - etcd
@@ -117,9 +130,13 @@ services:
         --address=$$(hostname -i)
         --master=http://apiserver:8080
         --cloud-config=/opt/mesos-cloud.conf
+        --service-account-private-key-file=/opt/ca.key
+        --root-ca-file=/opt/ca.crt
         --v=8
     volumes:
       - ${PWD}/mesos-cloud.conf:/opt/mesos-cloud.conf
+      - ${PWD}/ca.crt:/opt/ca.crt
+      - ${PWD}/ca.key:/opt/ca.key
     depends_on:
       - apiserver
       - mesosmaster
@@ -157,6 +174,7 @@ services:
       - etcd
       - apiserver
       - mesosmaster
+      - controller
 #   zk:
 #     image: k82cn/zk:3.4.9
 #     ports:
