@@ -29,8 +29,8 @@ services:
       - DOCKER_DAEMON_ARGS
       - GLOG_v=4
       - LOG=file
-#      - docker_http_proxy=9.21.58.21:3128
-#      - docker_https_proxy=9.21.58.21:3128
+      - docker_http_proxy=9.21.58.21:3128
+      - docker_https_proxy=9.21.58.21:3128
     links:
       - mesosmaster
 #  mesosagent_r:
