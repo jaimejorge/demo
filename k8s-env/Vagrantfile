@@ -1,0 +1,44 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "ubuntu/trusty64"
+
+  ips = %W(
+    172.30.8.101
+    172.30.8.102
+    172.30.8.103
+  )
+
+  master_ip = "172.30.8.100"
+
+  config.vm.box_check_update = false
+
+# start k8s master
+  config.vm.define master_name = "kube-master" do |config|
+  	config.vm.provider "virtualbox" do |v|
+    	v.memory = 4096
+	  	v.cpus = 2
+	end
+
+    config.vm.hostname = master_name
+    config.vm.network "private_network", ip: master_ip
+	config.vm.provision "docker", images: ["quay.io/coreos/etcd:v3.0.15"]
+	config.vm.provision "shell", inline: "cp /vagrant/hosts /etc/hosts"
+  end
+
+# start k8s slaves
+  (1..2).each do |i|
+    config.vm.define vm_name = "kube-slave%02d" % i do |config|
+  		config.vm.provider "virtualbox" do |v|
+    		v.memory = 4096
+		  	v.cpus = 2
+		end
+
+      config.vm.hostname = vm_name
+      config.vm.network "private_network", ip: ips[i-1]
+	  config.vm.provision "docker"
+	  config.vm.provision "shell", inline: "cp /vagrant/hosts /etc/hosts"
+    end
+  end
+end

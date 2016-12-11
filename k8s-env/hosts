@@ -1,0 +1,6 @@
+172.30.8.100 kube-master
+
+172.30.8.101 kube-slave01
+172.30.8.102 kube-slave02
+172.30.8.103 kube-slave03
+
