@@ -1,5 +1,7 @@
 #!/bin/bash
 
+PATH=/vagrant/bin:$PATH
+
 killall -9 etcd kube-apiserver kube-controller-manager kube-scheduler kube-proxy docker flanneld
 kube-proxy --cleanup-iptables=true
 
