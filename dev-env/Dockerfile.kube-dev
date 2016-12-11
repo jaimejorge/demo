@@ -1,7 +1,7 @@
 FROM ubuntu:14.04
 MAINTAINER Klaus Ma <klaus1982.cn@gmail.com>
 
-RUN apt-get update && apt-get install -y curl make git vim cscope vim-gocomplete gocode vim-syntax-go
+RUN apt-get update && apt-get install -y curl make git vim cscope vim-gocomplete gocode vim-syntax-go build-essential gcc g++
 
 RUN cd /usr/local/ && curl -SL https://storage.googleapis.com/golang/go1.7.4.linux-amd64.tar.gz | tar -xz
 ADD https://raw.githubusercontent.com/k82cn/vimconf/master/build_cscope_db /usr/local/bin
